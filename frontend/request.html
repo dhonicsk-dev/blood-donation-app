@@ -23,7 +23,7 @@
 async function create() {
   const token = localStorage.getItem("token");
 
-  await fetch("http://localhost:5000/api/requests", {
+  await fetch("https://blood-backend-6.onrender.com", {
     method: "POST",
     headers: {
       "Content-Type":"application/json",

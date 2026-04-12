@@ -34,7 +34,7 @@
 
 <script>
 async function register() {
-  await fetch("http://localhost:5000/api/register", {
+  await fetch("https://blood-backend-6.onrender.com", {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
@@ -47,7 +47,8 @@ async function register() {
 }
 
 async function login() {
-  const res = await fetch("http://localhost:5000/api/login", {
+  const res = await fetch("https://blood-backend-6.onrender.com"
+  , {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
