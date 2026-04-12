@@ -1,22 +1,58 @@
-const handleLogin = async () => {
-  try {
-    console.log("Login clicked");
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-    const res = await axios.post(`${API}/api/login`, {
-      email,
-      password
-    });
+function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-    console.log("Response:", res.data);
+  const navigate = useNavigate(); // ✅ CORRECT PLACE
 
-    localStorage.setItem("token", res.data.token);
+  const API = "https://blood-backend-6.onrender.com";
 
-    alert("Login success ✅");
+  const handleLogin = async () => {
+    try {
+      console.log("Login clicked");
 
-    navigate("/dashboard"); // 🔥 IMPORTANT
+      const res = await axios.post(`${API}/api/login`, {
+        email,
+        password
+      });
 
-  } catch (err) {
-    console.log(err);
-    alert("Login failed ❌");
-  }
-};
+      console.log("Response:", res.data);
+
+      localStorage.setItem("token", res.data.token);
+
+      alert("Login success ✅");
+
+      navigate("/dashboard"); // ✅ WORKS NOW
+
+    } catch (err) {
+      console.log(err);
+      alert("Login failed ❌");
+    }
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>Login</h2>
+
+      <input
+        placeholder="Email"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <br /><br />
+
+      <input
+        placeholder="Password"
+        type="password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <br /><br />
+
+      <button onClick={handleLogin}>Login</button>
+    </div>
+  );
+}
+
+export default Login;
