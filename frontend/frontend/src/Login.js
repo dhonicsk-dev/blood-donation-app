@@ -26,7 +26,7 @@ function Login() {
 
       alert("Login success ✅");
 
-      navigate("/dashboard");
+      navigate("/dashboard"); // ✅ STEP 4
 
     } catch (err) {
       console.log(err);
