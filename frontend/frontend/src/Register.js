@@ -6,12 +6,15 @@ function Register() {
   const [form, setForm] = useState({});
   const navigate = useNavigate();
 
- const API = "https://blood-backend-6.onrender.com";
+  const API = "https://blood-backend-6.onrender.com";
 
-axios.post(`${API}/api/login`, {
-  email,
-  password
-});
+  // ✅ handle input change
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
+  };
 
   const handleRegister = async () => {
     try {
@@ -20,13 +23,14 @@ axios.post(`${API}/api/login`, {
         return;
       }
 
-      await axios.post(`${API}/api/register`, form); // ✅ fixed
+      await axios.post(`${API}/api/register`, form);
 
       alert("Registered ✅");
 
       navigate("/");
 
     } catch (err) {
+      console.log(err);
       alert("Error ❌");
     }
   };

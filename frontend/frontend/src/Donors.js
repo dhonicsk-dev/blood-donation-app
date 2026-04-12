@@ -1,98 +1,68 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+<script>
+const API = "https://blood-backend-6.onrender.com";
 
-function Donors() {
-  const [bloodGroup, setBloodGroup] = useState("");
-  const [city, setCity] = useState("");
-  const [donors, setDonors] = useState([]);
-
-  const navigate = useNavigate();
-
-  const API = "https://blood-backend-6.onrender.com";
-
-  // ✅ Protect route
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      navigate("/");
+// ✅ Register
+async function register() {
+  try {
+    if (!name.value || !email.value || !password.value) {
+      alert("All fields required ❌");
+      return;
     }
-  }, [navigate]);
 
-  // 🔍 Search donors
-  const searchDonors = async () => {
-    try {
-      const token = localStorage.getItem("token");
+    const res = await fetch(`${API}/api/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: name.value,
+        email: email.value,
+        password: password.value
+      })
+    });
 
-      if (!bloodGroup || !city) {
-        alert("Enter blood group & city ❌");
-        return;
-      }
+    const data = await res.json();
 
-      const res = await axios.post(
-        `${API}/api/donors`,
-        { bloodGroup, city },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
-      );
-
-      setDonors(res.data.data || []);
-
-    } catch (err) {
-      console.log(err); // 🔥 debug
-      alert("Error fetching donors ❌");
+    if (res.ok) {
+      alert("Registered Successfully ✅");
+    } else {
+      alert(data.message || "Error ❌");
     }
-  };
 
-  // 🚪 Logout
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/");
-  };
-
-  return (
-    <div style={{ padding: "20px" }}>
-      <h2>Search Donors</h2>
-
-      <button onClick={handleLogout}>Logout</button>
-      <br /><br />
-
-      <input
-        placeholder="Blood Group (e.g O+)"
-        value={bloodGroup}
-        onChange={(e) => setBloodGroup(e.target.value)}
-      />
-      <br /><br />
-
-      <input
-        placeholder="City"
-        value={city}
-        onChange={(e) => setCity(e.target.value)}
-      />
-      <br /><br />
-
-      <button onClick={searchDonors}>Search</button>
-
-      <br /><br />
-
-      {/* ✅ Better UI */}
-      {donors.length === 0 ? (
-        <p>No donors found</p>
-      ) : (
-        <ul>
-          {donors.map((d, i) => (
-            <li key={i}>
-              <strong>{d.email}</strong> - {d.bloodGroup} - {d.city}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+  } catch (err) {
+    console.log(err);
+    alert("Server error ❌");
+  }
 }
 
-export default Donors;
+// ✅ Login
+async function login() {
+  try {
+    if (!lemail.value || !lpassword.value) {
+      alert("Enter email & password ❌");
+      return;
+    }
+
+    const res = await fetch(`${API}/api/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: lemail.value,
+        password: lpassword.value
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      localStorage.setItem("token", data.token);
+      alert("Login Successful ✅");
+      window.location.href = "request.html";
+    } else {
+      alert(data.message || "Login failed ❌");
+    }
+
+  } catch (err) {
+    console.log(err);
+    alert("Server error ❌");
+  }
+}
+</script>

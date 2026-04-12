@@ -33,8 +33,11 @@
 </div>
 
 <script>
+const API = "https://blood-backend-6.onrender.com";
+
+// ✅ Register
 async function register() {
-  await fetch("https://blood-backend-6.onrender.com", {
+  const res = await fetch(`${API}/api/register`, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
@@ -43,12 +46,19 @@ async function register() {
       password: password.value
     })
   });
-  alert("Registered Successfully ✅");
+
+  const data = await res.json();
+
+  if (res.ok) {
+    alert("Registered Successfully ✅");
+  } else {
+    alert(data.message || "Error ❌");
+  }
 }
 
+// ✅ Login
 async function login() {
-  const res = await fetch("https://blood-backend-6.onrender.com"
-  , {
+  const res = await fetch(`${API}/api/login`, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({
@@ -58,9 +68,14 @@ async function login() {
   });
 
   const data = await res.json();
-  localStorage.setItem("token", data.token);
-  alert("Login Successful ✅");
-  window.location.href = "request.html";
+
+  if (res.ok) {
+    localStorage.setItem("token", data.token);
+    alert("Login Successful ✅");
+    window.location.href = "request.html";
+  } else {
+    alert(data.message || "Login failed ❌");
+  }
 }
 </script>
 
