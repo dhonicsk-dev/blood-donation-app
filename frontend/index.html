@@ -72,7 +72,7 @@ async function login() {
   if (res.ok) {
     localStorage.setItem("token", data.token);
     alert("Login Successful ✅");
-    window.location.href = "request.html";
+   navigate("/dashboard");
   } else {
     alert(data.message || "Login failed ❌");
   }
