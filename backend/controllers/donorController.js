@@ -27,26 +27,35 @@ exports.createDonor = async (req, res) => {
 // 🔹 SEARCH DONORS (FINAL FIXED VERSION)
 exports.searchDonors = async (req, res) => {
   try {
-    let bloodGroup = req.query.bloodGroup;
-    let city = req.query.city;
+    const search = req.query.search;
 
-    // Fix '+' issue
-    if (bloodGroup) {
-      bloodGroup = bloodGroup.replace(" ", "+");
+    let query = {};
+
+    if (search && search.trim() !== "") {
+      const value = search.trim();
+
+      query = {
+        $or: [
+          { bloodGroup: { $regex: value, $options: "i" } },
+          { city: { $regex: value, $options: "i" } },
+          { userId: { $regex: value, $options: "i" } }
+        ]
+      };
     }
 
-    console.log("Searching:", bloodGroup, city);
+    const donors = await Donor.find(query);
 
-    // If no params → return all donors
-    if (!bloodGroup && !city) {
-      const allDonors = await Donor.find();
-      return res.json(allDonors);
-    }
-
-    const donors = await Donor.find({
-      bloodGroup: bloodGroup,
-      city: city
+    res.json({
+      success: true,
+      count: donors.length,
+      data: donors
     });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error ❌" });
+  }
+};
 
     res.json(donors);
 
