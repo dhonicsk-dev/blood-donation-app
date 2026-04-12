@@ -15,19 +15,19 @@ exports.createDonor = async (req, res) => {
 
     await donor.save();
 
-    res.json({ message: "Donor profile created" });
+    return res.json({ message: "Donor profile created" });
 
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
 
-// 🔹 SEARCH DONORS (FINAL FIXED VERSION)
+// 🔹 SEARCH DONORS (FINAL WORKING)
 exports.searchDonors = async (req, res) => {
   try {
-    const search = req.query.search;
+    const search = req.query.search; // ✅ GET
 
     let query = {};
 
@@ -45,22 +45,14 @@ exports.searchDonors = async (req, res) => {
 
     const donors = await Donor.find(query);
 
-    res.json({
+    return res.json({
       success: true,
       count: donors.length,
       data: donors
     });
 
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server error ❌" });
-  }
-};
-
-    res.json(donors);
-
   } catch (error) {
-    console.error("ERROR:", error);
-    res.status(500).json({ error: error.message });
+    console.error(error);
+    return res.status(500).json({ error: error.message });
   }
 };
