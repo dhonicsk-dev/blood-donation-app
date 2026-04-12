@@ -8,14 +8,12 @@ function Login() {
 
   const navigate = useNavigate(); // ✅ correct place
 
-  const API = "https://blood-backend-6.onrender.com"; // ✅ your backend
+  const API = "https://blood-backend-6.onrender.com";
 
-  const handleLogin = async () => {
-    try {
-      const res = await axios.post(`${API}/api/login`, {
-        email,
-        password
-      });
+axios.post(`${API}/api/login`, {
+  email,
+  password
+});
 
       localStorage.setItem("token", res.data.token);
 

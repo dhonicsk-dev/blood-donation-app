@@ -6,11 +6,12 @@ function Register() {
   const [form, setForm] = useState({});
   const navigate = useNavigate();
 
-  const API = "https://blood-backend-6.onrender.com"; // ✅ correct
+ const API = "https://blood-backend-6.onrender.com";
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+axios.post(`${API}/api/login`, {
+  email,
+  password
+});
 
   const handleRegister = async () => {
     try {

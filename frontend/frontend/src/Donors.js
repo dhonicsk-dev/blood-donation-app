@@ -9,7 +9,7 @@ function Donors() {
 
   const navigate = useNavigate();
 
-  const API = "https://blood-backend-6.onrender.com"; // ✅ correct
+  const API = "https://blood-backend-6.onrender.com";
 
   // ✅ Protect route
   useEffect(() => {
@@ -25,8 +25,13 @@ function Donors() {
     try {
       const token = localStorage.getItem("token");
 
+      if (!bloodGroup || !city) {
+        alert("Enter blood group & city ❌");
+        return;
+      }
+
       const res = await axios.post(
-        `${API}/api/donors`, // ✅ fixed
+        `${API}/api/donors`,
         { bloodGroup, city },
         {
           headers: {
@@ -38,6 +43,7 @@ function Donors() {
       setDonors(res.data.data || []);
 
     } catch (err) {
+      console.log(err); // 🔥 debug
       alert("Error fetching donors ❌");
     }
   };
@@ -56,26 +62,35 @@ function Donors() {
       <br /><br />
 
       <input
-        placeholder="Blood Group"
+        placeholder="Blood Group (e.g O+)"
+        value={bloodGroup}
         onChange={(e) => setBloodGroup(e.target.value)}
       />
       <br /><br />
 
       <input
         placeholder="City"
+        value={city}
         onChange={(e) => setCity(e.target.value)}
       />
       <br /><br />
 
       <button onClick={searchDonors}>Search</button>
 
-      <ul>
-        {donors.map((d, i) => (
-          <li key={i}>
-            {d.email} - {d.bloodGroup} - {d.city}
-          </li>
-        ))}
-      </ul>
+      <br /><br />
+
+      {/* ✅ Better UI */}
+      {donors.length === 0 ? (
+        <p>No donors found</p>
+      ) : (
+        <ul>
+          {donors.map((d, i) => (
+            <li key={i}>
+              <strong>{d.email}</strong> - {d.bloodGroup} - {d.city}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
