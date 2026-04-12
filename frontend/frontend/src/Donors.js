@@ -9,14 +9,16 @@ function Donors() {
 
   const navigate = useNavigate();
 
-  // ✅ Protect route (redirect if no token)
+  const API = "https://blood-backend-6.onrender.com"; // ✅ correct
+
+  // ✅ Protect route
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (!token) {
       navigate("/");
     }
-  }, []);
+  }, [navigate]);
 
   // 🔍 Search donors
   const searchDonors = async () => {
@@ -24,7 +26,7 @@ function Donors() {
       const token = localStorage.getItem("token");
 
       const res = await axios.post(
-        " https://blood-backend-6.onrender.com",
+        `${API}/api/donors`, // ✅ fixed
         { bloodGroup, city },
         {
           headers: {

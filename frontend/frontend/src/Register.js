@@ -6,16 +6,26 @@ function Register() {
   const [form, setForm] = useState({});
   const navigate = useNavigate();
 
+  const API = "https://blood-backend-6.onrender.com"; // ✅ correct
+
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleRegister = async () => {
     try {
-      await axios.post(" https://blood-backend-6.onrender.com", form);
+      if (!form.email || !form.password) {
+        alert("Email & Password required ❌");
+        return;
+      }
+
+      await axios.post(`${API}/api/register`, form); // ✅ fixed
+
       alert("Registered ✅");
+
       navigate("/");
-    } catch {
+
+    } catch (err) {
       alert("Error ❌");
     }
   };
@@ -24,14 +34,16 @@ function Register() {
     <div style={styles.container}>
       <h2>Register</h2>
 
-      <input name="name" placeholder="Name" onChange={handleChange} style={styles.input}/>
-      <input name="email" placeholder="Email" onChange={handleChange} style={styles.input}/>
-      <input name="password" placeholder="Password" type="password" onChange={handleChange} style={styles.input}/>
-      <input name="bloodGroup" placeholder="Blood Group" onChange={handleChange} style={styles.input}/>
-      <input name="city" placeholder="City" onChange={handleChange} style={styles.input}/>
-      <input name="phone" placeholder="Phone" onChange={handleChange} style={styles.input}/>
+      <input name="name" placeholder="Name" onChange={handleChange} style={styles.input} />
+      <input name="email" placeholder="Email" onChange={handleChange} style={styles.input} />
+      <input name="password" type="password" placeholder="Password" onChange={handleChange} style={styles.input} />
+      <input name="bloodGroup" placeholder="Blood Group" onChange={handleChange} style={styles.input} />
+      <input name="city" placeholder="City" onChange={handleChange} style={styles.input} />
+      <input name="phone" placeholder="Phone" onChange={handleChange} style={styles.input} />
 
-      <button onClick={handleRegister} style={styles.button}>Register</button>
+      <button onClick={handleRegister} style={styles.button}>
+        Register
+      </button>
     </div>
   );
 }
