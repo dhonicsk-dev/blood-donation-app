@@ -1,69 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function Donors() {
-  const [search, setSearch] = useState("");
   const [donors, setDonors] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  const API = "https://blood-backend-6.onrender.com";
+  const API = "http://localhost:5000";
 
-  const searchDonors = async () => {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    fetchDonors();
+  }, []);
 
-      const token = localStorage.getItem("token");
-
-      const url = search.trim()
-        ? `${API}/api/donors?search=${encodeURIComponent(search.trim())}`
-        : `${API}/api/donors`;
-
-      const res = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      setDonors(res.data?.data || []);
-
-    } catch (err) {
-      console.error(err.response?.data || err.message);
-      alert("Error fetching donors ❌");
-    } finally {
-      setLoading(false);
-    }
+  const fetchDonors = async () => {
+    const res = await axios.get(`${API}/api/donors`);
+    setDonors(res.data);
   };
 
   return (
-    <div>
-      <h4>Find Donors</h4>
-
-      <input
-        className="form-control mb-2"
-        placeholder="Search (blood, city...)"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-
-      <button className="btn btn-primary mb-3" onClick={searchDonors}>
-        {loading ? "Searching..." : "Search"}
-      </button>
-
-      {!loading && donors.length > 0 && (
-        <p className="text-success">{donors.length} donor(s) found</p>
-      )}
-
-      {!loading && donors.length === 0 && (
-        <p className="text-muted">No donors found</p>
-      )}
+    <div className="container mt-4">
+      <h3 className="text-danger mb-4 text-center">
+        🩸 Available Donors
+      </h3>
 
       <div className="row">
         {donors.map((d, i) => (
-          <div key={i} className="col-md-4 mb-3">
-            <div className="card p-3 shadow-sm">
-              <h5>{d.bloodGroup}</h5>
-              <p>{d.city}</p>
-              <small>User ID: {d.userId}</small>
+          <div key={i} className="col-md-4 mb-4">
+            <div className="card p-4 shadow border-0 text-center">
+
+              <h2 className="text-danger">{d.bloodGroup}</h2>
+              <p className="text-muted">📍 {d.city}</p>
+
+              <button className="btn btn-success w-100">
+                📞 Contact
+              </button>
+
             </div>
           </div>
         ))}

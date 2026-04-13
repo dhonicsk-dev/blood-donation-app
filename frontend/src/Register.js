@@ -15,7 +15,7 @@ function Register() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const API = "https://blood-backend-6.onrender.com";
+  const API = "http://localhost:5000";
 
   const handleChange = (e) => {
     setForm({
