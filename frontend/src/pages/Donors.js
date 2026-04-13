@@ -1,90 +1,78 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import { Card, Row, Col, Form } from "react-bootstrap";
 
-function Donors() {
-  const [donors, setDonors] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-  const [blood, setBlood] = useState("");
-  const [city, setCity] = useState("");
+function Donate() {
+  const [form, setForm] = useState({
+    name: "",
+    bloodGroup: "",
+    city: ""
+  });
 
-  // 📡 Fetch donors
-  useEffect(() => {
-    axios.get("http://localhost:5000/api/donors")
-      .then(res => {
-        setDonors(res.data);
-        setFiltered(res.data);
-      })
-      .catch(() => {
-        console.log("Error fetching donors");
+  const handleSubmit = async () => {
+    try {
+      await axios.post("http://localhost:5000/api/donor", form);
+      alert("Donor added ✅");
+
+      setForm({
+        name: "",
+        bloodGroup: "",
+        city: ""
       });
-  }, []);
 
-  // 🔍 Filter logic
-  useEffect(() => {
-    let result = donors;
-
-    if (blood) {
-      result = result.filter(d => d.bloodGroup === blood);
+    } catch (err) {
+      console.log(err);
+      alert("Error ❌");
     }
-
-    if (city) {
-      result = result.filter(d =>
-        d.city.toLowerCase().includes(city.toLowerCase())
-      );
-    }
-
-    setFiltered(result);
-  }, [blood, city, donors]);
-
-  // 🔐 Protect page (MOVE DOWN HERE)
-  if (!localStorage.getItem("token")) {
-    return <h3>Please login first 🔐</h3>;
-  }
+  };
 
   return (
-    <div>
-      <h2 className="mb-3">🩸 Available Donors</h2>
+    <div style={{ textAlign: "center" }}>
+      <h2>Become a Donor 🩸</h2>
 
-      {/* Filters */}
-      <Row className="mb-4">
-        <Col md={4}>
-          <Form.Select onChange={(e) => setBlood(e.target.value)}>
-            <option value="">All Blood Groups</option>
-            <option>A+</option><option>B+</option>
-            <option>O+</option><option>AB+</option>
-            <option>A-</option><option>B-</option>
-            <option>O-</option><option>AB-</option>
-          </Form.Select>
-        </Col>
+      {/* Name */}
+      <input
+        value={form.name}
+        placeholder="Name"
+        onChange={(e) =>
+          setForm({ ...form, name: e.target.value })
+        }
+      />
+      <br /><br />
 
-        <Col md={4}>
-          <Form.Control
-            placeholder="Search by city..."
-            onChange={(e) => setCity(e.target.value)}
-          />
-        </Col>
-      </Row>
+      {/* Blood Group */}
+      <select
+        value={form.bloodGroup}
+        onChange={(e) =>
+          setForm({ ...form, bloodGroup: e.target.value })
+        }
+        style={{ padding: "8px", width: "200px" }}
+      >
+        <option value="">Select Blood Group</option>
+        <option value="A+">A+</option>
+        <option value="B+">B+</option>
+        <option value="O+">O+</option>
+        <option value="AB+">AB+</option>
+        <option value="A-">A-</option>
+        <option value="B-">B-</option>
+        <option value="O-">O-</option>
+        <option value="AB-">AB-</option>
+      </select>
+      <br /><br />
 
-      {/* Donor Cards */}
-      <Row>
-        {filtered.map((d) => (
-          <Col md={4} key={d._id}>
-            <Card className="p-3 mb-3 shadow-sm text-center card">
-              <h5>{d.name}</h5>
-              <h3 style={{ color: "#dc3545" }}>{d.bloodGroup}</h3>
-              <p>📍 {d.city}</p>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      {/* City */}
+      <input
+        value={form.city}
+        placeholder="City"
+        onChange={(e) =>
+          setForm({ ...form, city: e.target.value })
+        }
+      />
+      <br /><br />
 
-      {/* Empty State */}
-      {filtered.length === 0 && (
-        <h5 className="text-center mt-3">No donors found 😔</h5>
-      )}
+      {/* Submit */}
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 }
 
-export default Donors;
+export default Donate;

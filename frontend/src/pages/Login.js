@@ -17,13 +17,17 @@ function Login() {
         form
       );
 
+      // ✅ Save login data
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", form.email);
 
       alert("Login success ✅");
 
-      navigate("/"); // ✅ FIXED
-    } catch {
+      // ✅ Navigate without reload
+      navigate("/donors");
+
+    } catch (err) {
+      console.log(err);
       alert("Login failed ❌");
     }
   };
