@@ -1,28 +1,26 @@
 import React from "react";
+import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 function Home() {
   return (
-    <div className="bg-light text-center py-5">
+    <div style={{
+      background: "linear-gradient(135deg,#ff416c,#ff4b2b)",
+      color: "white",
+      padding: "100px 20px",
+      textAlign: "center",
+      borderRadius: "10px"
+    }}>
+      <h1>🩸 Blood Connect</h1>
+      <p>Donate blood, save lives ❤️</p>
 
-      <h1 className="display-4 fw-bold text-danger">
-        🩸 Save Lives with Blood Donation
-      </h1>
+      <Button as={Link} to="/register" variant="light" className="me-3">
+        Become Donor
+      </Button>
 
-      <p className="text-muted mt-3">
-        Find donors quickly and help those in need ❤️
-      </p>
-
-      <div className="mt-4">
-        <Link to="/donors" className="btn btn-danger btn-lg me-3">
-          🔍 Find Donors
-        </Link>
-
-        <Link to="/register" className="btn btn-outline-danger btn-lg">
-          ❤️ Become Donor
-        </Link>
-      </div>
-
+      <Button as={Link} to="/donors" variant="dark">
+        Find Blood
+      </Button>
     </div>
   );
 }

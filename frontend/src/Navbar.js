@@ -57,3 +57,14 @@ export default Navbar;
     </Nav>
   </Container>
 </Navbar>
+
+{user ? (
+  <>
+    <span style={{ color: "white", marginRight: "10px" }}>{user}</span>
+    <button onClick={logout}>Logout</button>
+  </>
+) : (
+  <Nav.Link as={Link} to="/login">Login</Nav.Link>
+)}
+
+<Nav.Link as={Link} to="/register">Register</Nav.Link>

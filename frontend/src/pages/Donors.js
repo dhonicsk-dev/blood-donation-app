@@ -8,14 +8,19 @@ function Donors() {
   const [blood, setBlood] = useState("");
   const [city, setCity] = useState("");
 
+  // 📡 Fetch donors
   useEffect(() => {
     axios.get("http://localhost:5000/api/donors")
       .then(res => {
         setDonors(res.data);
         setFiltered(res.data);
+      })
+      .catch(() => {
+        console.log("Error fetching donors");
       });
   }, []);
 
+  // 🔍 Filter logic
   useEffect(() => {
     let result = donors;
 
@@ -31,6 +36,11 @@ function Donors() {
 
     setFiltered(result);
   }, [blood, city, donors]);
+
+  // 🔐 Protect page (MOVE DOWN HERE)
+  if (!localStorage.getItem("token")) {
+    return <h3>Please login first 🔐</h3>;
+  }
 
   return (
     <div>
@@ -58,9 +68,9 @@ function Donors() {
 
       {/* Donor Cards */}
       <Row>
-        {filtered.map((d, i) => (
-          <Col md={4} key={i}>
-            <Card className="p-3 mb-3 shadow-sm text-center">
+        {filtered.map((d) => (
+          <Col md={4} key={d._id}>
+            <Card className="p-3 mb-3 shadow-sm text-center card">
               <h5>{d.name}</h5>
               <h3 style={{ color: "#dc3545" }}>{d.bloodGroup}</h3>
               <p>📍 {d.city}</p>
@@ -71,7 +81,7 @@ function Donors() {
 
       {/* Empty State */}
       {filtered.length === 0 && (
-        <h5>No donors found 😔</h5>
+        <h5 className="text-center mt-3">No donors found 😔</h5>
       )}
     </div>
   );

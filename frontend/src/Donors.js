@@ -1,3 +1,6 @@
+if (!localStorage.getItem("token")) {
+  return <h3>Please login first 🔐</h3>;
+}
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 

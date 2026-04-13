@@ -1,71 +1,51 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Form, Button, Card } from "react-bootstrap";
 
 function Register() {
-  // ✅ THIS WAS MISSING / WRONG
   const [form, setForm] = useState({
-    name: "",
-    bloodGroup: "",
-    city: ""
+    email: "",
+    password: ""
   });
 
-  const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-  };
+  const handleRegister = async () => {
+    try {
+      await axios.post(
+        "http://localhost:5000/api/register",
+        form
+      );
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    await axios.post("http://localhost:5000/api/donor", form);
-
-    alert("Donor Registered ✅");
-
-    // ✅ reset form (this caused your error earlier)
-    setForm({
-      name: "",
-      bloodGroup: "",
-      city: ""
-    });
+      alert("Registered successfully ✅");
+      window.location.href = "/login";
+    } catch {
+      alert("Registration failed ❌");
+    }
   };
 
   return (
-    <Card className="p-4 shadow">
-      <h2 className="mb-3 text-center">🩸 Register as Donor</h2>
+    <div style={{ textAlign: "center" }}>
+      <h2>Register</h2>
 
-      <Form onSubmit={handleSubmit}>
-        <Form.Control
-          name="name"
-          placeholder="Name"
-          value={form.name}
-          onChange={handleChange}
-          className="mb-3"
-        />
+      <input
+        placeholder="Email"
+        value={form.email}
+        onChange={(e) =>
+          setForm({ ...form, email: e.target.value })
+        }
+      />
+      <br /><br />
 
-        <Form.Control
-          name="bloodGroup"
-          placeholder="Blood Group"
-          value={form.bloodGroup}
-          onChange={handleChange}
-          className="mb-3"
-        />
+      <input
+        type="password"
+        placeholder="Password"
+        value={form.password}
+        onChange={(e) =>
+          setForm({ ...form, password: e.target.value })
+        }
+      />
+      <br /><br />
 
-        <Form.Control
-          name="city"
-          placeholder="City"
-          value={form.city}
-          onChange={handleChange}
-          className="mb-3"
-        />
-
-        <Button variant="danger" type="submit">
-          Register
-        </Button>
-      </Form>
-    </Card>
+      <button onClick={handleRegister}>Register</button>
+    </div>
   );
 }
 
