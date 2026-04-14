@@ -10,7 +10,8 @@ function Donate() {
 
   const handleSubmit = async () => {
     try {
-      await axios.post("http://localhost:5000/api/donor", form);
+      const API = "https://blood-backend-6.onrender.com";
+      await axios.post(`${API}/api/donor`, form);
       alert("Donor added ✅");
 
       setForm({

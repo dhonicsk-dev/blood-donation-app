@@ -2,10 +2,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 function Navbar() {
-  const username = localStorage.getItem("username");
+  const user = localStorage.getItem("user"); // ✅ correct key
 
   const handleLogout = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     window.location.href = "/login";
   };
 
@@ -18,9 +19,11 @@ function Navbar() {
         </Link>
 
         <div className="d-flex align-items-center">
-          {username && (
+
+          {/* ✅ Show username only if logged in */}
+          {user && (
             <span className="text-white me-3">
-              👤 {username}
+              👤 {user}
             </span>
           )}
 
@@ -32,9 +35,17 @@ function Navbar() {
             Become Donor
           </Link>
 
-          <button className="btn btn-dark" onClick={handleLogout}>
-            Logout
-          </button>
+          {/* ✅ Conditional buttons */}
+          {user ? (
+            <button className="btn btn-dark" onClick={handleLogout}>
+              Logout
+            </button>
+          ) : (
+            <Link className="btn btn-dark" to="/login">
+              Login
+            </Link>
+          )}
+
         </div>
 
       </div>
@@ -43,28 +54,3 @@ function Navbar() {
 }
 
 export default Navbar;
-
-<Navbar bg="dark" variant="dark" expand="lg" className="shadow">
-  <Container>
-    <Navbar.Brand as={Link} to="/" style={{ fontWeight: "bold" }}>
-      🩸 Blood Connect
-    </Navbar.Brand>
-
-    <Nav className="ms-auto">
-      <Nav.Link as={Link} to="/">Home</Nav.Link>
-      <Nav.Link as={Link} to="/register">Donate</Nav.Link>
-      <Nav.Link as={Link} to="/donors">Find Blood</Nav.Link>
-    </Nav>
-  </Container>
-</Navbar>
-
-{user ? (
-  <>
-    <span style={{ color: "white", marginRight: "10px" }}>{user}</span>
-    <button onClick={logout}>Logout</button>
-  </>
-) : (
-  <Nav.Link as={Link} to="/login">Login</Nav.Link>
-)}
-
-<Nav.Link as={Link} to="/register">Register</Nav.Link>
