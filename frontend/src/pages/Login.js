@@ -1,21 +1,60 @@
-const API = "https://blood-backend-6.onrender.com"; // your backend
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-const handleLogin = async () => {
-  try {
-    const res = await axios.post(`${API}/api/login`, form);
+function Login() {
+  const navigate = useNavigate();
 
-    localStorage.setItem("token", res.data.token);
-    localStorage.setItem("user", form.email);
+  const [form, setForm] = useState({
+    email: "",
+    password: ""
+  });
 
-    alert("Login success ✅");
-    navigate("/donors");
+  // ✅ KEEP ONLY ONE
+  const API = "https://blood-backend-6.onrender.com";
 
-  } catch (err) {
-    console.log(err.response?.data || err);
-    alert("Login failed ❌");
-  }
-};
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post(`${API}/api/login`, form);
 
-const API = "backend-url";   // define once
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", form.email);
 
-await axios.post(`${API}/api/login`, form);  // single call
+      alert("Login success ✅");
+      navigate("/donors");
+
+    } catch (err) {
+      console.log(err.response?.data || err);
+      alert("Login failed ❌");
+    }
+  };
+
+  return (
+    <div style={{ textAlign: "center" }}>
+      <h2>Login</h2>
+
+      <input
+        placeholder="Email"
+        value={form.email}
+        onChange={(e) =>
+          setForm({ ...form, email: e.target.value })
+        }
+      />
+      <br /><br />
+
+      <input
+        type="password"
+        placeholder="Password"
+        value={form.password}
+        onChange={(e) =>
+          setForm({ ...form, password: e.target.value })
+        }
+      />
+      <br /><br />
+
+      <button onClick={handleLogin}>Login</button>
+    </div>
+  );
+}
+
+export default Login;
