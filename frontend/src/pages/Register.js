@@ -13,7 +13,7 @@ function Register() {
   const handleRegister = async () => {
     try {
       await axios.post(
-        "https://blood-backend-6.onrender.com/api/register",
+        "const API = process.env.REACT_APP_API_URL;",
         form
       );
 

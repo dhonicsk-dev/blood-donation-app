@@ -13,7 +13,7 @@ function Login() {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        "const API = process.env.REACT_APP_API_URL;",
+        "const API = process.env.REACT_APP_API_URL;;",
         await axios.post(`${API}/api/login`, form);
         form
       );
