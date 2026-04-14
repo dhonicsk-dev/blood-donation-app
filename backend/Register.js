@@ -1,33 +1,62 @@
-app.post("/api/register", async (req, res) => {
-  try {
-    const { name, email, password, phone, bloodGroup, city } = req.body;
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-    if (!name || !email || !password || !phone || !bloodGroup || !city) {
-      return res.status(400).json({ message: "All fields required" });
+function Login() {
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    email: "",
+    password: ""
+  });
+
+  // ✅ Correct API usage
+  const API = process.env.REACT_APP_API_URL;
+
+  const handleLogin = async () => {
+    try {
+      const res = await axios.post(`${API}/api/login`, form);
+
+      // ✅ Save login data
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", form.email);
+
+      alert("Login success ✅");
+
+      navigate("/donors");
+
+    } catch (err) {
+      console.log(err.response?.data || err);
+      alert("Login failed ❌");
     }
+  };
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
-    }
+  return (
+    <div style={{ textAlign: "center" }}>
+      <h2>Login</h2>
 
-    const hashed = await bcrypt.hash(password, 10);
+      <input
+        placeholder="Email"
+        value={form.email}
+        onChange={(e) =>
+          setForm({ ...form, email: e.target.value })
+        }
+      />
+      <br /><br />
 
-    const user = new User({
-      name,
-      email,
-      password: hashed,
-      phone,
-      bloodGroup,
-      city
-    });
+      <input
+        type="password"
+        placeholder="Password"
+        value={form.password}
+        onChange={(e) =>
+          setForm({ ...form, password: e.target.value })
+        }
+      />
+      <br /><br />
 
-    await user.save();
+      <button onClick={handleLogin}>Login</button>
+    </div>
+  );
+}
 
-    res.json({ message: "User registered successfully ✅" });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ error: err.message });
-  }
-});
+export default Login;
