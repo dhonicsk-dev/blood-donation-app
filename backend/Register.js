@@ -11,7 +11,8 @@ function Login() {
   });
 
   // ✅ Correct API usage
-  const API = process.env.REACT_APP_API_URL;
+  const API = process.env.REACT_APP_API_URL; // define API first
+const res = await axios.post(`${API}/api/login`, form);
 
   const handleLogin = async () => {
     try {
