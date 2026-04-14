@@ -1,13 +1,11 @@
-const express = require("express");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const User = require("../models/User");
-
-const router = express.Router();
-
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, bloodGroup, city } = req.body;
+
+    // ✅ Validate all fields
+    if (!name || !email || !phone || !password || !bloodGroup || !city) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -21,41 +19,16 @@ router.post("/register", async (req, res) => {
       email,
       phone,
       password: hashedPassword,
+      bloodGroup,   // ✅ added
+      city          // ✅ added
     });
 
     await user.save();
 
     res.json({ message: "User registered successfully" });
+
   } catch (error) {
+    console.log(error); // 👈 add this for debugging
     res.status(500).json({ error: error.message });
   }
 });
-
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ message: "User not found" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: "Invalid password" });
-    }
-
-    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
-    });
-
-    res.json({
-      message: "Login successful",
-      token,
-    });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-module.exports = router;
