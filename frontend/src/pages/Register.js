@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     email: "",
     password: ""
@@ -15,8 +18,12 @@ function Register() {
       );
 
       alert("Registered successfully ✅");
-      window.location.href = "/login";
-    } catch {
+
+      // redirect to login
+      navigate("/login");
+
+    } catch (err) {
+      console.log(err);
       alert("Registration failed ❌");
     }
   };
