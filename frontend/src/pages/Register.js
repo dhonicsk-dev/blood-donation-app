@@ -10,20 +10,19 @@ function Register() {
     password: ""
   });
 
+  // ✅ Define API correctly
+  const API = "https://blood-backend-6.onrender.com";
+
   const handleRegister = async () => {
     try {
-      await axios.post(
-        "const API = process.env.REACT_APP_API_URL;",
-        form
-      );
+      // ✅ Single correct API call
+      await axios.post(`${API}/api/register`, form);
 
       alert("Registered successfully ✅");
-
-      // redirect to login
       navigate("/login");
 
     } catch (err) {
-      console.log(err);
+      console.log(err.response?.data || err);
       alert("Registration failed ❌");
     }
   };
