@@ -15,7 +15,9 @@ function Register() {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
-  const API = "http://localhost:5000";
+
+  // ✅ Use environment variable instead of localhost
+  const API = process.env.REACT_APP_API_URL;
 
   const handleChange = (e) => {
     setForm({
@@ -81,7 +83,6 @@ function Register() {
           onChange={handleChange}
         />
 
-        {/* ✅ Dropdown (no typing mistakes) */}
         <select
           name="bloodGroup"
           className="form-control mb-2"
