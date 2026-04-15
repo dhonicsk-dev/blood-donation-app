@@ -1,101 +1,53 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function Donate() {
-  const [form, setForm] = useState({
-    name: "",
-    bloodGroup: "",
-    city: ""
-  });
+function Donors() {
+  const [donors, setDonors] = useState([]);
 
-  const handleSubmit = async () => {
-    try {
-      const API = "https://blood-backend-6.onrender.com";
+  const API = "https://blood-backend-6.onrender.com";
+  const token = localStorage.getItem("token");
 
-const handleSubmit = async () => {
-  try {
-    await axios.post(
-      `${API}/api/donor`,
-      {
-        name,
-        bloodGroup,
-        city
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`
-        }
+  // ✅ Always call hooks first
+  useEffect(() => {
+    const fetchDonors = async () => {
+      try {
+        const res = await axios.get(`${API}/api/donors`);
+        setDonors(res.data);
+      } catch (err) {
+        console.log(err);
       }
-    );
+    };
 
-    alert("Donor added ✅");
+    fetchDonors();
+  }, []);
 
-  } catch (err) {
-    console.log(err.response?.data || err);
-    alert("Error submitting donor ❌");
+  // ✅ Then condition
+  if (!token) {
+    return <h3 className="text-center mt-5">Please login first 🔐</h3>;
   }
-};
-
-      setForm({
-        name: "",
-        bloodGroup: "",
-        city: ""
-      });
-
-    } catch (err) {
-      console.log(err);
-      alert("Error ❌");
-    }
-  };
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <h2>Become a Donor 🩸</h2>
+    <div className="container mt-4">
+      <h3 className="text-danger mb-4 text-center">
+        🩸 Available Donors
+      </h3>
 
-      {/* Name */}
-      <input
-        value={form.name}
-        placeholder="Name"
-        onChange={(e) =>
-          setForm({ ...form, name: e.target.value })
-        }
-      />
-      <br /><br />
+      <div className="row">
+        {donors.map((d, i) => (
+          <div key={i} className="col-md-4 mb-4">
+            <div className="card p-4 shadow border-0 text-center">
+              <h2 className="text-danger">{d.bloodGroup}</h2>
+              <p className="text-muted">📍 {d.city}</p>
 
-      {/* Blood Group */}
-      <select
-        value={form.bloodGroup}
-        onChange={(e) =>
-          setForm({ ...form, bloodGroup: e.target.value })
-        }
-        style={{ padding: "8px", width: "200px" }}
-      >
-        <option value="">Select Blood Group</option>
-        <option value="A+">A+</option>
-        <option value="B+">B+</option>
-        <option value="O+">O+</option>
-        <option value="AB+">AB+</option>
-        <option value="A-">A-</option>
-        <option value="B-">B-</option>
-        <option value="O-">O-</option>
-        <option value="AB-">AB-</option>
-      </select>
-      <br /><br />
-
-      {/* City */}
-      <input
-        value={form.city}
-        placeholder="City"
-        onChange={(e) =>
-          setForm({ ...form, city: e.target.value })
-        }
-      />
-      <br /><br />
-
-      {/* Submit */}
-      <button onClick={handleSubmit}>Submit</button>
+              <button className="btn btn-success w-100">
+                📞 Contact
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
 
-export default Donate;
+export default Donors;
