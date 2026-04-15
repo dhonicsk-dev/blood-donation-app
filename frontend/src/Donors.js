@@ -1,22 +1,31 @@
-if (!localStorage.getItem("token")) {
-  return <h3>Please login first 🔐</h3>;
-}
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 function Donors() {
   const [donors, setDonors] = useState([]);
 
-  const API = "http://localhost:5000";
+  const API = "https://blood-backend-6.onrender.com";
+
+  const token = localStorage.getItem("token");
+
+  // ✅ Protect route
+  if (!token) {
+    return <h3 className="text-center mt-5">Please login first 🔐</h3>;
+  }
+
+  // ✅ Fetch donors
+  const fetchDonors = async () => {
+    try {
+      const res = await axios.get(`${API}/api/donors`);
+      setDonors(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     fetchDonors();
   }, []);
-
-  const fetchDonors = async () => {
-    const res = await axios.get(`${API}/api/donors`);
-    setDonors(res.data);
-  };
 
   return (
     <div className="container mt-4">
