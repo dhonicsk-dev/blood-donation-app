@@ -17,7 +17,7 @@ const donorSchema = new mongoose.Schema({
 
 module.exports = mongoose.model("Donor", donorSchema);
 
-app.post("/api/donor", async (req, res) => {
+app.post("/api/donor", auth, async (req, res) => {
   const donor = new Donor(req.body);
   await donor.save();
   res.json({ message: "Saved ✅" });

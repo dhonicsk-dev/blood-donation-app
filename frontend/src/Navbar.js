@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 function Navbar() {
-  const user = localStorage.getItem("user"); // ✅ correct key
+  const [user, setUser] = useState(localStorage.getItem("user"));
+
+  // ✅ Update when login/logout happens
+  useEffect(() => {
+    const checkUser = () => {
+      setUser(localStorage.getItem("user"));
+    };
+
+    window.addEventListener("storage", checkUser);
+
+    return () => {
+      window.removeEventListener("storage", checkUser);
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    setUser(null); // ✅ update UI immediately
     window.location.href = "/login";
   };
 
@@ -20,7 +34,6 @@ function Navbar() {
 
         <div className="d-flex align-items-center">
 
-          {/* ✅ Show username only if logged in */}
           {user && (
             <span className="text-white me-3">
               👤 {user}
@@ -35,7 +48,6 @@ function Navbar() {
             Become Donor
           </Link>
 
-          {/* ✅ Conditional buttons */}
           {user ? (
             <button className="btn btn-dark" onClick={handleLogout}>
               Logout

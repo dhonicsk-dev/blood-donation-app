@@ -6,8 +6,19 @@ function Donors() {
 
   const API = "https://blood-backend-6.onrender.com";
 
-  const token = localStorage.getItem("token");
-
+await axios.post(
+  `${API}/api/donor`,
+  {
+    name,
+    bloodGroup,
+    city
+  },
+  {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`
+    }
+  }
+);
   // ✅ Protect route
   if (!token) {
     return <h3 className="text-center mt-5">Please login first 🔐</h3>;
