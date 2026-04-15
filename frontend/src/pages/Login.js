@@ -17,8 +17,11 @@ function Login() {
     try {
       const res = await axios.post(`${API}/api/login`, form);
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", form.email);
+     localStorage.setItem("user", form.email);
+localStorage.setItem("token", res.data.token);
+
+// force refresh so navbar updates
+window.location.href = "/donors";
 
       alert("Login success ✅");
       navigate("/donors");
