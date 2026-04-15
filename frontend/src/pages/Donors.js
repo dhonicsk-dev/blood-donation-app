@@ -11,8 +11,30 @@ function Donate() {
   const handleSubmit = async () => {
     try {
       const API = "https://blood-backend-6.onrender.com";
-      await axios.post(`${API}/api/donor`, form);
-      alert("Donor added ✅");
+
+const handleSubmit = async () => {
+  try {
+    await axios.post(
+      `${API}/api/donor`,
+      {
+        name,
+        bloodGroup,
+        city
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+
+    alert("Donor added ✅");
+
+  } catch (err) {
+    console.log(err.response?.data || err);
+    alert("Error submitting donor ❌");
+  }
+};
 
       setForm({
         name: "",

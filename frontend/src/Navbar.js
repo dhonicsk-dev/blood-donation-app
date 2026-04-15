@@ -18,11 +18,10 @@ function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null); // ✅ update UI immediately
-    window.location.href = "/login";
-  };
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  window.location.reload(); // ✅ force refresh
+};
 
   return (
     <nav className="navbar navbar-dark bg-danger shadow">
